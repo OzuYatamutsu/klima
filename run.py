@@ -1,4 +1,5 @@
 from influx.influx_adapter import *
+from influx.measurement_strings import *
 from time import sleep
 from config import *
 from sensors.sensor import Sensor
@@ -11,16 +12,19 @@ basicConfig(level=log_level)
 logger = getLogger(__name__)
 
 # Sensor objects
-temp_sensor = None
-humid_sensor = None
+temp_sensor: Sensor = None
+humid_sensor: Sensor = None
+
+# Current readings
+current_temp = 0.0
+current_humidity = 0.0
 
 def main():
     """
     The entrypoint of the program.
     """
-
-    if influx_settings['enabled']:
-        get_client()
+    global temp_sensor
+    global humid_sensor
 
     if sensor_settings['type'] is SensorType.FILE:
         temp_sensor = FileSensor(sensor_settings['temperature'])
@@ -39,24 +43,52 @@ def main():
             sensor_settings['timeout']
         )
 
-    poll_loop(temp_sensor, humid_sensor)
+    poll_loop()
 
 
-def poll_loop(temp_sensor: Sensor, humid_sensor: Sensor):
+def poll_loop():
     """Repeatedly polls for new data."""
+
+    global current_temp
+    global current_humidity
 
     while True:
         temp_val = temp_sensor.read_data().strip()
         humid_val = humid_sensor.read_data().strip()
 
-        # TODO
         if len(temp_val) > 0:
-            print(temp_val)
+            logger.debug('Got a new temperature value! %s', temp_val)
+            current_temp = float(temp_val)
+
         if len(humid_val) > 0:
-            print(humid_val)
+            logger.debug('Got a new humidity value! %s', humid_val)
+            current_humidity = float(humid_val)
+
+        if influx_settings['enabled']:
+            influx_push_sensor_data(current_temp, current_humidity)
 
         # Wait poll_rate before reading vals again
         sleep(poll_rate)
+
+
+def influx_push_sensor_data(temp_val: float, humid_val: float) -> bool:
+    """
+    Pushes new temperature and humidity datapoints to InfluxDB.
+    
+    :return: True if the db write was successful.
+    """
+
+    db = get_client()
+    temp_datapoint = construct_influx_datapoint(temp_measurement_str, temp_val)
+    humid_datapoint = construct_influx_datapoint(humidity_measurement_str, humid_val)
+
+    try:
+        db.write_points(temp_datapoint + humid_datapoint)
+    except Exception as e:
+        logger.error("Error when writing datapoints to influx: %s", e)
+        return False
+    logger.debug("Wrote temp and humid datapoints to influx: (%s, %s)", temp_val, humid_val)
+    return True
 
 try:
     main()

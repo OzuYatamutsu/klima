@@ -1,5 +1,6 @@
 from config import influx_settings
 from influxdb import InfluxDBClient
+from datetime import datetime
 from logging import getLogger
 logger = getLogger(__name__)
 
@@ -24,6 +25,28 @@ def get_client() -> InfluxDBClient:
         __setup_database()
     return influx_client
 
+
+def construct_influx_datapoint(measurement: str, *args):
+    """
+    Given a measurement string and at least one value, returns a 
+    formatted datapoint, ready to be inserted.
+    """
+
+    json_datapoint = []
+
+    for point in args:
+        json_datapoint.append(
+            {
+                'measurement': measurement,
+                'tags': {},
+                'time': str(datetime.utcnow()),
+                'fields': {
+                    'value': point
+                }
+            }
+        )
+
+    return json_datapoint
 
 def __initialize():
     """
