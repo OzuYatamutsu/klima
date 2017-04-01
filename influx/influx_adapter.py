@@ -1,8 +1,7 @@
 from config import influx_settings
 from influxdb import InfluxDBClient
-from logging import getLogger, DEBUG
+from logging import getLogger
 logger = getLogger(__name__)
-logger.setLevel(DEBUG) # TODO
 
 username = influx_settings['username']
 password = influx_settings['password']
@@ -14,28 +13,47 @@ use_ssl = influx_settings['ssl']
 # Global DB client
 influx_client = None
 
-def initialize():
+
+def get_client() -> InfluxDBClient:
+    """
+    Returns the client object, initializing if necessary.
+    """
+
+    if influx_client is None:
+        __initialize()
+        __setup_database()
+    return influx_client
+
+
+def __initialize():
     """
     Connects the client to the database (and assigns a value to influx_client).
     """
 
     global influx_client
     influx_client = InfluxDBClient(
-        host = hostname,
-        port = port,
-        username = username,
-        password = password,
-        database = database,
-        ssl = use_ssl
+        host=hostname,
+        port=port,
+        username=username,
+        password=password,
+        database=database,
+        ssl=use_ssl
     )
 
     logger.debug('Opened new connection to InfluxDB.')
 
-def get_client():
+
+def __setup_database():
     """
-    Returns the client object, initializing if necessary.
+    Creates a new database on the InfluxDB server.
     """
 
-    if influx_client is None:
-      initialize()
-    return influx_client
+    # Open connection
+    db = influx_client
+
+    # Create a new database for data, if not exists
+    logger.info('Creating a new database (if we don\'t have one already)')
+    db.create_database(database)
+
+    # We're OK now
+    logger.info('Done! Database is ready for writing!')
