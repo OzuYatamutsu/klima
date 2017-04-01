@@ -4,9 +4,6 @@ from logging import getLogger, DEBUG
 logger = getLogger(__name__)
 logger.setLevel(DEBUG) # TODO
 
-# Access db object from outside adapter 
-global influx_client
-
 username = influx_settings['username']
 password = influx_settings['password']
 hostname = influx_settings['hostname']
@@ -14,11 +11,15 @@ port = influx_settings['port']
 database = influx_settings['database']
 use_ssl = influx_settings['ssl']
 
+# Global DB client
+influx_client = None
+
 def initialize():
     """
     Connects the client to the database (and assigns a value to influx_client).
     """
-    
+
+    global influx_client
     influx_client = InfluxDBClient(
         host = hostname,
         port = port,
@@ -27,7 +28,8 @@ def initialize():
         database = database,
         ssl = use_ssl
     )
-    logger.debug('Opening new connection to InfluxDB.')
+
+    logger.debug('Opened new connection to InfluxDB.')
 
 def get_client():
     """
@@ -37,4 +39,3 @@ def get_client():
     if influx_client is None:
       initialize()
     return influx_client
-

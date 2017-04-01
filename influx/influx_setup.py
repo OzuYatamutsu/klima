@@ -11,7 +11,7 @@ db = get_client()
 
 # Create a new database for data, if not exists
 logger.info('Creating a new database (if we don\'t have one already)')
-db.create_database(database, if_not_exists = True)
+db.create_database(database)
 
 # We're OK now
 logger.info('Done! Database is ready for writing!')
