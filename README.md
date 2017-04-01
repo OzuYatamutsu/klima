@@ -1,6 +1,12 @@
 # ![](icon.png) Klima
 **Klima** is a utility that polls serial or filesystem devices for climate data, exposes them through a RESTful API, and (optionally) aggregates the data into [InfluxDB](https://github.com/influxdata/influxdb) for tracking climate data over time.
 
+### API
+TODO
+
+### Sample output
+TODO
+
 ### Requirements
 **Klima** is written in Python 3. Collecting serial data through [filesystem device hooks](https://en.wikipedia.org/wiki/Everything_is_a_file) probably only works on Linux (although I haven't tried).
 
