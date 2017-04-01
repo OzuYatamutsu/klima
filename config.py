@@ -11,9 +11,9 @@ Valid values for type are SensorType.FILE (if locations point to a file)
 or SensorType.SERIAL (if they point to serial interfaces)
 '''
 
-sensors = {
-    'temperature': '~/dev/test_0',
-    'humidity': '~/dev/test_1',
+sensor_settings = {
+    'temperature': '/Users/secollin/dev/test_0',
+    'humidity': '/Users/secollin/dev/test_1',
     'type': SensorType.FILE,
 
     # Ignore these if type is not set to SERIAL

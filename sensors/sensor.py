@@ -8,11 +8,17 @@ class Sensor:
 
         self.read_stream = read_stream
 
-    def read_data(self):
+    def read_data(self) -> str:
         """
         Reads data from the stream until a newline character is encountered. 
         """
 
-        with self.read_stream as stream:
-            result = stream.readline()
+        result = self.read_stream.readline()
         return result
+
+    def close(self):
+        """
+        Closes the underlying stream object. This sensor will no longer be able to be read from.
+        """
+
+        stream.close()
