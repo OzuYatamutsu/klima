@@ -10,6 +10,9 @@ from logging import basicConfig, getLogger
 basicConfig(level=log_level)
 logger = getLogger(__name__)
 
+# Sensor objects
+temp_sensor = None
+humid_sensor = None
 
 def main():
     """
@@ -19,8 +22,6 @@ def main():
     if influx_settings['enabled']:
         get_client()
 
-    temp_sensor = None
-    humid_sensor = None
     if sensor_settings['type'] is SensorType.FILE:
         temp_sensor = FileSensor(sensor_settings['temperature'])
         humid_sensor = FileSensor(sensor_settings['humidity'])
@@ -57,4 +58,11 @@ def poll_loop(temp_sensor: Sensor, humid_sensor: Sensor):
         # Wait poll_rate before reading vals again
         sleep(poll_rate)
 
-main()
+try:
+    main()
+except KeyboardInterrupt:
+    logger.info("KeyboardInterrupt - Closing streams and shutting down.")
+    if temp_sensor is not None:
+        temp_sensor.close()
+    if humid_sensor is not None:
+        humid_sensor.close()
