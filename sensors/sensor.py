@@ -21,4 +21,4 @@ class Sensor:
         Closes the underlying stream object. This sensor will no longer be able to be read from.
         """
 
-        stream.close()
+        self.read_stream.close()
