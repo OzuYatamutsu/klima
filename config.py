@@ -21,10 +21,13 @@ sensors = {
     'timeout': 1
 }
 
-# Logging
-log_level = DEBUG
+'''
+InfluxDB settings - configure these to point to the account you want to push timeseries data to. 
+(If you don't, set enabled to False.)
 
-# InfluxDB settings
+Otherwise, the account here must have read/write privileges to the database specified.
+If it doesn't exist, it must have (admin) privileges to create one with that name.
+'''
 influx_settings = {
     'username': 'root',
     'password': 'root',
@@ -34,3 +37,9 @@ influx_settings = {
     'ssl': False,
     'enabled': True
 }
+
+# Set this to determine how often we poll for new sensor data (seconds)
+poll_rate = 5
+
+# Set this to change how chatty the logs are
+log_level = DEBUG
