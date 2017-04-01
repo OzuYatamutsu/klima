@@ -6,6 +6,7 @@ from logging import basicConfig, getLogger
 basicConfig(level=log_level)
 logger = getLogger(__name__)
 
+
 def main():
     """
     The entrypoint of the program.
