@@ -1,7 +1,9 @@
-## Logging
-## TODO
+from logging import basicConfig, DEBUG, INFO, WARNING, ERROR, CRITICAL
 
-## InfluxDB settings
+# Logging
+log_level = DEBUG
+
+# InfluxDB settings
 influx_settings = {
     'username': 'root',
     'password': 'root',
@@ -11,4 +13,3 @@ influx_settings = {
     'ssl': False,
     'enabled': True
 }
-
