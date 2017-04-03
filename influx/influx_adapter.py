@@ -36,8 +36,11 @@ def influx_push_data(temp_val: float, humid_val: float, datapoint_type: Datapoin
     """
 
     db = get_client()
-    temp_datapoint = construct_influx_datapoint(temp_measurement_str, temp_val)
-    humid_datapoint = construct_influx_datapoint(humidity_measurement_str, humid_val)
+    temp_str = temp_measurement_str if datapoint_type is DatapointType.SENSOR else temp_location_str
+    humid_str = humidity_measurement_str if datapoint_type is DatapointType.SENSOR else humidity_location_str
+
+    temp_datapoint = construct_influx_datapoint(temp_str, temp_val)
+    humid_datapoint = construct_influx_datapoint(humid_str, humid_val)
 
     try:
         db.write_points(temp_datapoint + humid_datapoint)
