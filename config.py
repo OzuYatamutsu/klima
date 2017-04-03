@@ -42,14 +42,21 @@ influx_settings = {
 Location settings - set to True and set your location string in order to track outside 
 temperatures from a weather station (for comparison against sensor data).
 
+You will need to obtain an API key to use this feature: 
+https://www.wunderground.com/weather/api/
+(then fill in the value in the api_key field below)
+
 Example location strings:
-'location': 'Sunnyvale, CA'
-'location': 'Vancouver, BC'
-'location': 'Shanghai, China'
+'location': 'CA/Sunnyvale'
+'location': 'Australia/Sydney'
+'location': 'LAX'
+'location': '94087'
+'location': 'autoip' # (Autodetects based on IP address)
 '''
 location_settings = {
     'enabled': True,
-    'location': 'Sunnyvale, CA'
+    'api_key': '01495736358eb3c7',
+    'location': 'autoip'
 }
 
 # Set this to determine how often we poll for new sensor data (seconds)
