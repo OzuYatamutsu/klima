@@ -1,4 +1,5 @@
 from config import influx_settings
+from influx.measurement_strings import *
 from influxdb import InfluxDBClient
 from datetime import datetime
 from logging import getLogger
@@ -47,6 +48,27 @@ def construct_influx_datapoint(measurement: str, *args):
         )
 
     return json_datapoint
+
+
+def influx_push_sensor_data(temp_val: float, humid_val: float) -> bool:
+    """
+    Pushes new temperature and humidity datapoints to InfluxDB.
+
+    :return: True if the db write was successful.
+    """
+
+    db = get_client()
+    temp_datapoint = construct_influx_datapoint(temp_measurement_str, temp_val)
+    humid_datapoint = construct_influx_datapoint(humidity_measurement_str, humid_val)
+
+    try:
+        db.write_points(temp_datapoint + humid_datapoint)
+    except Exception as e:
+        logger.error("Error when writing datapoints to influx: %s", e)
+        return False
+    logger.debug("Wrote temp and humid datapoints to influx: (%s, %s)", temp_val, humid_val)
+    return True
+
 
 def __initialize():
     """

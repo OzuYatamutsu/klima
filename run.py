@@ -1,5 +1,4 @@
 from influx.influx_adapter import *
-from influx.measurement_strings import *
 from time import sleep
 from config import *
 from sensors.sensor import Sensor
@@ -70,25 +69,6 @@ def poll_loop():
         # Wait poll_rate before reading vals again
         sleep(poll_rate)
 
-
-def influx_push_sensor_data(temp_val: float, humid_val: float) -> bool:
-    """
-    Pushes new temperature and humidity datapoints to InfluxDB.
-    
-    :return: True if the db write was successful.
-    """
-
-    db = get_client()
-    temp_datapoint = construct_influx_datapoint(temp_measurement_str, temp_val)
-    humid_datapoint = construct_influx_datapoint(humidity_measurement_str, humid_val)
-
-    try:
-        db.write_points(temp_datapoint + humid_datapoint)
-    except Exception as e:
-        logger.error("Error when writing datapoints to influx: %s", e)
-        return False
-    logger.debug("Wrote temp and humid datapoints to influx: (%s, %s)", temp_val, humid_val)
-    return True
 
 try:
     main()
