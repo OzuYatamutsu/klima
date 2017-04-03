@@ -1,4 +1,5 @@
 from influx.influx_adapter import *
+from influx.datapoint_utils import DatapointType
 from time import sleep
 from config import *
 from sensors.sensor import Sensor
@@ -64,7 +65,7 @@ def poll_loop():
             current_humidity = float(humid_val)
 
         if influx_settings['enabled']:
-            influx_push_sensor_data(current_temp, current_humidity)
+            influx_push_data(current_temp, current_humidity, DatapointType.SENSOR)
 
         # Wait poll_rate before reading vals again
         sleep(poll_rate)
