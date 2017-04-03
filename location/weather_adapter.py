@@ -1,21 +1,18 @@
-from config import location_settings
-from logging import getLogger
-logger = getLogger(__name__)
-
-
-def get_outside_temp() -> float:
+class WeatherAdapter:
     """
-    Returns the current outside temperature for the configured location (in Celsius).
+    Grabs weather data from a remote source
     """
-    # weather_settings['location']
-    # TODO
-    return 0.0
 
+    def get_outside_temp(self) -> float:
+        """
+        Returns the current outside temperature for the configured location (in Celsius).
+        """
 
-def get_outside_humidity() -> float:
-    """
-    Returns the current outside relative humidity for the configured location.
-    """
-    # weather_settings['location']
-    # TODO
-    return 0.0
+        raise NotImplementedError("Class was not implemented!")
+
+    def get_outside_humidity(self) -> float:
+        """
+        Returns the current outside relative humidity for the configured location.
+        """
+
+        raise NotImplementedError("Class was not implemented!")

@@ -1,6 +1,7 @@
 from influx.influx_adapter import *
 from influx.datapoint_utils import DatapointType
-from location.weather_adapter import *
+from location.weather_adapter import WeatherAdapter
+from location.wunderground_adapter import WundergroundAdapter
 from time import sleep
 from config import *
 from sensors.sensor import Sensor
@@ -21,6 +22,7 @@ current_temp = 0.0
 current_humidity = 0.0
 current_location_temp = 0.0
 current_location_humidity = 0.0
+
 
 def main():
     """
@@ -70,9 +72,10 @@ def poll_loop():
             current_humidity = float(humid_val)
 
         if location_settings['enabled']:
+            remote_querier : WeatherAdapter = WundergroundAdapter()
             logger.debug('Collecting location temp/humiditiy from remote')
-            current_location_temp = get_outside_temp()
-            current_location_humidity = get_outside_humidity()
+            current_location_temp = remote_querier.get_outside_temp()
+            current_location_humidity = remote_querier.get_outside_humidity()
 
             logger.debug('Got the following remote temp/humidity: (%s, %s)',
                          str(current_location_temp), str(current_location_humidity))
