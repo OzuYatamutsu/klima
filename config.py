@@ -38,6 +38,20 @@ influx_settings = {
     'enabled': True
 }
 
+'''
+Location settings - set to True and set your location string in order to track outside 
+temperatures from a weather station (for comparison against sensor data).
+
+Example location strings:
+'location': 'Sunnyvale, CA'
+'location': 'Vancouver, BC'
+'location': 'Shanghai, China'
+'''
+location_settings = {
+    'enabled': True,
+    'location': 'Sunnyvale, CA'
+}
+
 # Set this to determine how often we poll for new sensor data (seconds)
 poll_rate = 5
 
