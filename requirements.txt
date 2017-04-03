@@ -1,3 +1,2 @@
 influxdb==4.0.0
 pyserial==3.3
-yweather==0.1.1
