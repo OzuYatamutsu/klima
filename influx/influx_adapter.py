@@ -47,7 +47,11 @@ def influx_push_data(temp_val: float, humid_val: float, datapoint_type: Datapoin
     except Exception as e:
         logger.error("Error when writing datapoints to influx: %s", e)
         return False
-    logger.debug("Wrote temp and humid datapoints to influx: (%s, %s)", temp_val, humid_val)
+    logger.debug(
+        "Wrote temp and humid datapoints to influx: (%s, %s), Type: %s",
+        temp_val, humid_val, str(datapoint_type)
+    )
+
     return True
 
 
