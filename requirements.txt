@@ -1,3 +1,4 @@
 influxdb==4.*
 pyserial==3.*
 requests==2.*
+flask==0.*
