@@ -1,7 +1,7 @@
 from config import influx_settings
 from influx.measurement_strings import *
+from influx.datapoint_utils import *
 from influxdb import InfluxDBClient
-from datetime import datetime
 from logging import getLogger
 logger = getLogger(__name__)
 
@@ -27,32 +27,10 @@ def get_client() -> InfluxDBClient:
     return influx_client
 
 
-def construct_influx_datapoint(measurement: str, *args):
+def influx_push_data(temp_val: float, humid_val: float, datapoint_type: DatapointType) -> bool:
     """
-    Given a measurement string and at least one value, returns a 
-    formatted datapoint, ready to be inserted.
-    """
-
-    json_datapoint = []
-
-    for point in args:
-        json_datapoint.append(
-            {
-                'measurement': measurement,
-                'tags': {},
-                'time': str(datetime.utcnow()),
-                'fields': {
-                    'value': point
-                }
-            }
-        )
-
-    return json_datapoint
-
-
-def influx_push_sensor_data(temp_val: float, humid_val: float) -> bool:
-    """
-    Pushes new temperature and humidity datapoints to InfluxDB.
+    Pushes new temperature and humidity datapoints to InfluxDB. Set datapoint_type to 
+    SENSOR if pushing local data, LOCATION if pushing online weather data.
 
     :return: True if the db write was successful.
     """
