@@ -96,13 +96,3 @@ def poll_loop():
 
         # Wait poll_rate before reading vals again
         sleep(poll_rate)
-
-
-try:
-    main()
-except KeyboardInterrupt:
-    logger.info("KeyboardInterrupt - Closing streams and shutting down.")
-    if temp_sensor is not None:
-        temp_sensor.close()
-    if humid_sensor is not None:
-        humid_sensor.close()
