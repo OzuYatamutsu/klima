@@ -3,7 +3,7 @@ from config import influx_settings, location_settings
 from measurement_type import MeasurementType
 from influx.influx_adapter import get_data_at_relative_time
 from logging import getLogger
-from flask import Flask, abort, jsonify
+from flask import Flask, abort, jsonify, render_template
 
 logger = getLogger(__name__)
 app = Flask(__name__)
@@ -16,7 +16,15 @@ prog_thread.start()
 
 @app.route('/')
 def hello_world():
-    return 'TODO'
+    current_temp = str(current_vals['current_temp'])
+    current_humidity = str(current_vals['current_humidity'])
+    location_temp = str(current_vals['current_location_temp'])
+    location_humidity = str(current_vals['current_location_humidity'])
+
+    return render_template('index.html',
+                           current_temp=current_temp, current_humidity=current_humidity,
+                           location_temp=location_temp, location_humidity=location_humidity
+    )
 
 
 @app.route('/api/<string:sensor_type>')

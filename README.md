@@ -15,7 +15,7 @@ None.
 
 #### Example
 
-N/A
+![](get_slash.png)
 
 ### Get the current sensor reading
 ```
