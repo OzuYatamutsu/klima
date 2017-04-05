@@ -1,6 +1,8 @@
 from run import *
+from measurement_type import MeasurementType
+from influx.influx_adapter import get_data_at_relative_time
 from logging import getLogger
-from flask import Flask, abort
+from flask import Flask, abort, jsonify
 
 logger = getLogger(__name__)
 app = Flask(__name__)
@@ -28,8 +30,12 @@ def get_current_temp_or_humidity(metric_type: str):
 
 @app.route('/api/<string:metric_type>/<string:timescale>')
 def get_temp_or_humidity_at_time(metric_type: str, timescale: str):
-    # TODO
-    abort(501)
+    if metric_type == 'temperature':
+        return jsonify(get_data_at_relative_time(MeasurementType.SENSOR_TEMPERATURE, timescale))
+    elif metric_type == 'humidity':
+        return jsonify(get_data_at_relative_time(MeasurementType.SENSOR_HUMIDITY, timescale))
+    else:
+        abort(404)
 
 
 @app.route('/api/<string:metric_type>/location')

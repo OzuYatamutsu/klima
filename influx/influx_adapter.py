@@ -1,6 +1,7 @@
 from config import influx_settings
 from influx.measurement_strings import *
 from influx.datapoint_utils import *
+from measurement_type import MeasurementType
 from influxdb import InfluxDBClient
 from logging import getLogger
 logger = getLogger(__name__)
@@ -53,6 +54,41 @@ def influx_push_data(temp_val: float, humid_val: float, datapoint_type: Datapoin
     )
 
     return True
+
+
+def get_data_at_relative_time(measurement: MeasurementType, relative_time_ago: str):
+    """
+    Returns data for a given measurement type at some relative time in the past.
+    """
+
+    # Returns the first result for each case
+    base_query = "SELECT value FROM %s WHERE time > now() - %s LIMIT 1"
+    if measurement == MeasurementType.SENSOR_TEMPERATURE:
+        result = get_client().query(base_query % (temp_measurement_str, relative_time_ago))
+        if len(result) > 0:
+            return list(result.get_points(temp_measurement_str))[0]
+        else:
+            return 0.0
+    elif measurement == MeasurementType.SENSOR_HUMIDITY:
+        result = get_client().query(base_query % (humidity_measurement_str, relative_time_ago))
+        if len(result) > 0:
+            return list(result.get_points(humidity_measurement_str))[0]
+        else:
+            return 0.0
+    elif measurement == MeasurementType.LOCATION_TEMPERATURE:
+        result = get_client().query(base_query % (temp_location_str, relative_time_ago))
+        if len(result) > 0:
+            return list(result.get_points(temp_location_str))[0]
+        else:
+            return 0.0
+    elif measurement == MeasurementType.LOCATION_HUMIDITY:
+        result = get_client().query(base_query % (humidity_location_str, relative_time_ago))
+        if len(result) > 0:
+            return list(result.get_points(humidity_location_str))[0]
+        else:
+            return 0.0
+
+    return None
 
 
 def __initialize():

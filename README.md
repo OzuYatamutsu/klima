@@ -14,6 +14,15 @@ All routes indicate `GET` requests unless otherwise specified. For `{timescale}`
 | `/api/{temperature,humidity}/location/diff/{timescale}`     | _Requires location and historical data._ Displays the difference between the current sensor temperature or humidity and the current outside temperature or humidity at `{timescale}` before now for the given location. Requires historical data and location to be configured _at the timescale queried_ -- otherwise returns a `204`. | `GET /api/humidity/location/diff/2d`         | Returns the difference between sensor and outside humidity 2 days ago           |
 | `/api/{temperature,humidity}/location/diff/avg/{timescale}` | _Requires location and historical data._ Calculates the average difference between sensor data and current outside temperature or humidity for a given timescale.                                                                                                                                                                       | `GET /api/temperature/location/diff/avg/24h` | Displays the 24 hour average difference between outside and inside temperatures |
 
+All `{timescale}` queries return JSON in the following format:
+
+```json
+{
+    'time': <closest UTC timestamp to query>
+    'value': <Celsius temperature or relative humidity %>
+}
+```
+
 ## Sample output
 TODO
 
