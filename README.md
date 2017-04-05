@@ -215,7 +215,7 @@ Gets the average difference between outside and inside relative humidities over 
 ```
 
 ## Requirements
-**Klima** is written in Python 3. Collecting serial data through [filesystem device hooks](https://en.wikipedia.org/wiki/Everything_is_a_file) probably only works on Linux (although I haven't tried).
+**Klima** is written in Python 3. Collecting serial data through [filesystem devices](https://en.wikipedia.org/wiki/Everything_is_a_file) probably only works on Linux (although I haven't tried).
 
 ### Getting up and running
 To save historical data, you'll need to install InfluxDB from your favorite package manager, e.g.:
