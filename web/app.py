@@ -1,4 +1,3 @@
-from threading import Thread
 from run import *
 from logging import getLogger
 from flask import Flask, abort
@@ -7,9 +6,10 @@ logger = getLogger(__name__)
 app = Flask(__name__)
 
 # Initialize thread
-main_thread = Thread(target=main)
-main_thread.daemon = True
-main_thread.start()
+current_vals = {}
+prog_thread: Thread = MainThread(current_vals)
+prog_thread.start()
+
 
 @app.route('/')
 def hello_world():
@@ -62,12 +62,5 @@ def get_location_temp_or_humidity_diff_avg_at_time(metric_type: str, timescale: 
 
 app.run()
 
-# Blocks execution - if we get here, we probably got a Ctrl+C
-# TODO: BELOW DOES NOTHING, WE NEED TO SEND THREAD A SIGNAL
-logger.info("KeyboardInterrupt - Closing streams and shutting down.")
-if temp_sensor is not None:
-    logger.debug('Closing temp sensor.')
-    temp_sensor.close()
-if humid_sensor is not None:
-    logger.debug('Closing humid sensor.')
-    humid_sensor.close()
+# Shut down thread if Ctrl+C
+prog_thread.join(1)

@@ -60,7 +60,7 @@ location_settings = {
 }
 
 # Set this to determine how often we poll for new sensor data (seconds)
-poll_rate = 5
+poll_rate = 60
 
 # Set this to change how chatty the logs are
 log_level = DEBUG
