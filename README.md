@@ -62,7 +62,7 @@ GET /api/:sensor_type/:timescale
 ```
 GET /api/humidity/5m
 ```
-Get the relative humidity.
+Get the relative humidity 5 minutes ago.
 
 ##### Response
 ```json
