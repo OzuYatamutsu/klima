@@ -48,6 +48,16 @@ def get_location_temp_or_humidity(metric_type: str):
         abort(404)
 
 
+@app.route('/api/<string:metric_type>/location/<string:timescale>')
+def get_location_temp_or_humidity_at_time(metric_type: str, timescale: str):
+    if metric_type == 'temperature':
+        return jsonify(get_data_at_relative_time(MeasurementType.LOCATION_TEMPERATURE, timescale))
+    elif metric_type == 'humidity':
+        return jsonify(get_data_at_relative_time(MeasurementType.LOCATION_HUMIDITY, timescale))
+    else:
+        abort(404)
+
+
 @app.route('/api/<string:metric_type>/location/diff')
 def get_location_temp_or_humidity_diff(metric_type: str):
     if metric_type == 'temperature':
