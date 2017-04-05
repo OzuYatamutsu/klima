@@ -232,7 +232,7 @@ To install required libraries:
 pip install -r requirements.txt
 ```
 
-Then, modify the config values that apply to you in `config.py`. Finally:
+Then, copy `config.sample.py` to `config.py` and modify the config values that apply to you in `config.py`. Finally:
 
 ```
 python run.py

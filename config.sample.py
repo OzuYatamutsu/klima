@@ -12,9 +12,9 @@ or SensorType.SERIAL (if they point to serial interfaces)
 '''
 
 sensor_settings = {
-    'temperature': '/Users/secollin/dev/test_0',
-    'humidity': '/Users/secollin/dev/test_1',
-    'type': SensorType.FILE,
+    'temperature': '/dev/ttyACM0',
+    'humidity': '/dev/ttyACM1',
+    'type': SensorType.SERIAL,
 
     # Ignore these if type is not set to SERIAL
     'baud': 9600,
@@ -33,7 +33,7 @@ influx_settings = {
     'password': 'root',
     'hostname': 'localhost',
     'port': 8086,
-    'database': '_klima_dev', 
+    'database': 'klima',
     'ssl': False,
     'enabled': True
 }
@@ -55,7 +55,7 @@ Example location strings:
 '''
 location_settings = {
     'enabled': True,
-    'api_key': '01495736358eb3c7',
+    'api_key': 'YOUR_KEY_HERE',
     'location': 'autoip'
 }
 
@@ -63,4 +63,4 @@ location_settings = {
 poll_rate = 60
 
 # Set this to change how chatty the logs are
-log_level = DEBUG
+log_level = WARNING

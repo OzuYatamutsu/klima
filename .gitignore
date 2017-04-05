@@ -90,3 +90,9 @@ ENV/
 
 # IDEA project files
 .idea/*
+
+# Mac files
+.DS_Store
+
+# Config files
+config.py
