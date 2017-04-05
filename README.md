@@ -1,4 +1,4 @@
-# ![](icon.png) Klima
+# ![](icon.png) Klima [![Build Status](https://travis-ci.org/OzuYatamutsu/klima.svg?branch=master)](https://travis-ci.org/OzuYatamutsu/klima)
 **Klima** is a utility that polls serial or filesystem devices for climate data, exposes them through a RESTful API, and (optionally) aggregates the data into [InfluxDB](https://github.com/influxdata/influxdb) for tracking climate data over time.
 
 ## API
