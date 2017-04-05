@@ -4,6 +4,47 @@
 ## API
 All routes indicate `GET` requests unless otherwise specified. For `{timescale}` arguments, refer to [InfluxDB's documentation on duration literals](https://docs.influxdata.com/influxdb/v1.2/query_language/spec/#durations) for valid options. For endpoints which require additional configuration, returns a `501` unless configured in `config.py`. For `{temperature,humidity}` options, replace with the metric you are trying to query (`temperature` for temperature, `humidity` for humidity).
 
+### Display a summary page
+```
+GET /
+```
+
+#### Parameters
+
+| Name | Description |
+|------|-------------|
+|      |             |
+
+#### Example
+
+### Display the current sensor reading
+```
+GET /api/:sensor_type
+```
+
+#### Parameters
+
+| Name          |                        Description |
+|---------------|------------------------------------|
+| `sensor_type` | One of `temperature` or `humidity`.|           |
+
+##### Example
+```
+GET /api/temperature
+```
+##### Response
+```
+Status: 200 OK
+```
+```json
+{
+  "time": "2017-04-04T00:00:01.429856Z",
+  "value": "18.7"
+}
+```
+
+
+
 | Route                                                        | Description                                                                                                                                                                                                                                                                                                                             | Example                                      | Example explanation                                                             |
 |--------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------|---------------------------------------------------------------------------------|
 | /                                                            | Displays a summary page of all data.                                                                                                                                                                                                                                                                                                    | N/A                                          | N/A                                                                             |
