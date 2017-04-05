@@ -1,3 +1,8 @@
+# Augment path for src files
+import sys
+import os.path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 from unittest import TestCase, main
 from influx.influx_adapter import *
 from influx.datapoint_utils import *
@@ -22,7 +27,7 @@ class TestInflux(TestCase):
         Tests if we can construct and write a datapoint to the database
         """
 
-        influx_push_data(temp_val=10, humid_val=20, datapoint_type=DatapointType.SENSOR)
+        influx_push_data(temp_val=10.0, humid_val=20.0, datapoint_type=DatapointType.SENSOR)
 
         # And clean up
         get_client().delete_series(influx_settings['database'], temp_measurement_str)
