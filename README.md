@@ -20,12 +20,14 @@ All `{timescale}` queries return JSON in the following format:
 ```json
 {
     'time': <closest UTC timestamp to query>
-    'value': <Celsius temperature or relative humidity %>
+    'value': <Celsius temperature or relative humidity % or average>
 }
 ```
 
 ## Sample output
-TODO
+```
+# TODO
+```
 
 ## Requirements
 **Klima** is written in Python 3. Collecting serial data through [filesystem device hooks](https://en.wikipedia.org/wiki/Everything_is_a_file) probably only works on Linux (although I haven't tried).

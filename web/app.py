@@ -112,8 +112,28 @@ def get_location_temp_or_humidity_diff_at_time(metric_type: str, timescale: str)
 
 @app.route('/api/<string:metric_type>/location/diff/avg/<string:timescale>')
 def get_location_temp_or_humidity_diff_avg_at_time(metric_type: str, timescale: str):
-    # TODO
-    abort(501)
+    result = {}
+
+    if metric_type == 'temperature':
+        temp_sensor_avg = get_data_at_relative_time(MeasurementType.SENSOR_TEMPERATURE, timescale, True)
+        temp_location_avg = get_data_at_relative_time(MeasurementType.LOCATION_TEMPERATURE, timescale, True)
+        if temp_sensor_avg == 0.0 or temp_location_avg == 0.0:
+            result = 0.0
+        else:
+            result = {'time': temp_sensor_avg['time'], 'value': temp_sensor_avg['value'] - temp_location_avg['value']}
+    elif metric_type == 'humidity':
+        humid_sensor_avg = get_data_at_relative_time(MeasurementType.SENSOR_HUMIDITY, timescale, True)
+        humid_location_avg = get_data_at_relative_time(MeasurementType.LOCATION_HUMIDITY, timescale, True)
+        if humid_sensor_avg == 0.0 or humid_location_avg == 0.0:
+            result = 0.0
+        else:
+            result = {'time': humid_sensor_avg['time'], 'value': humid_sensor_avg['value'] - humid_location_avg['value']}
+    else:
+        abort(404)
+
+    if result == 0.0:
+        return '', 204
+    return jsonify(result)
 
 
 app.run()

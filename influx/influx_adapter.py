@@ -56,13 +56,16 @@ def influx_push_data(temp_val: float, humid_val: float, datapoint_type: Datapoin
     return True
 
 
-def get_data_at_relative_time(measurement: MeasurementType, relative_time_ago: str):
+def get_data_at_relative_time(measurement: MeasurementType, relative_time_ago: str, avg=False):
     """
     Returns data for a given measurement type at some relative time in the past.
+    If avg, reports 10-sample moving average of metric instead.
     """
 
     # Returns the first result for each case
     base_query = "SELECT value FROM %s WHERE time > now() - %s LIMIT 1"
+    if avg:
+        base_query = "SELECT MOVING_AVERAGE(value, 5) as value FROM %s WHERE time > now() - %s LIMIT 10"
     if measurement == MeasurementType.SENSOR_TEMPERATURE:
         result = get_client().query(base_query % (temp_measurement_str, relative_time_ago))
         if len(result) > 0:
