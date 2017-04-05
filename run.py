@@ -10,6 +10,10 @@ from sensors.file_sensor import FileSensor
 from sensors.serial_sensor import SerialSensor
 from logging import basicConfig, getLogger
 
+# Test classes
+from test.mock.mock_sensor import MockSensor
+from test.mock.mock_weather_adapter import MockWeatherAdapater
+
 # Set up logger
 basicConfig(level=log_level)
 logger = getLogger(__name__)
@@ -52,6 +56,11 @@ class MainThread(Thread):
                 sensor_settings['timeout']
             )
 
+        # For Travis
+        elif is_testing:
+            self.temp_sensor = MockSensor()
+            self.humid_sensor = MockSensor()
+
     def run(self):
         """
         Starts the program thread.
@@ -70,7 +79,7 @@ class MainThread(Thread):
                 self.current_vals['current_humidity'] = float(humid_val)
 
             if location_settings['enabled']:
-                remote_querier: WeatherAdapter = WundergroundAdapter()
+                remote_querier: WeatherAdapter = WundergroundAdapter() if not is_testing else MockWeatherAdapater
                 logger.debug('Collecting location temp/humiditiy from remote')
                 self.current_vals['current_location_temp'] = remote_querier.get_outside_temp()
                 self.current_vals['current_location_humidity'] = remote_querier.get_outside_humidity()

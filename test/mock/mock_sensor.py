@@ -1,4 +1,5 @@
 from sensors.sensor import Sensor
+from random import randrange
 from logging import getLogger
 logger = getLogger(__name__)
 
@@ -8,7 +9,7 @@ class MockSensor(Sensor):
         self.is_closed = False
 
     def read_data(self):
-        return 1.5
+        return 1.5 + randrange(0, 10)
 
     def close(self):
         self.is_closed = True

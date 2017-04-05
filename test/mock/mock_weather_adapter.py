@@ -1,4 +1,6 @@
 from location.weather_adapter import WeatherAdapter
+from random import randrange
+
 
 class MockWeatherAdapater(WeatherAdapter):
     """
@@ -6,7 +8,7 @@ class MockWeatherAdapater(WeatherAdapter):
     """
 
     def get_outside_temp(self) -> float:
-        return 1.1
+        return 1.1 + randrange(0, 10)
 
     def get_outside_humidity(self) -> float:
-        return 50.0
+        return 50.0 + randrange(0, 10)

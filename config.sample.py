@@ -64,3 +64,6 @@ poll_rate = 60
 
 # Set this to change how chatty the logs are
 log_level = WARNING
+
+# Don't touch this - used for Travis testing
+is_testing = False
