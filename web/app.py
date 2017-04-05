@@ -19,9 +19,9 @@ def hello_world():
 @app.route('/api/<string:metric_type>')
 def get_current_temp_or_humidity(metric_type: str):
     if metric_type == 'temperature':
-        return str(current_temp)
+        return str(current_vals['current_temp'])
     elif metric_type == 'humidity':
-        return str(current_humidity)
+        return str(current_vals['current_humidity'])
     else:
         abort(404)
 
@@ -35,17 +35,25 @@ def get_temp_or_humidity_at_time(metric_type: str, timescale: str):
 @app.route('/api/<string:metric_type>/location')
 def get_location_temp_or_humidity(metric_type: str):
     if metric_type == 'temperature':
-        return str(current_location_temp)
+        return str(current_vals['current_location_temp'])
     elif metric_type == 'humidity':
-        return str(current_location_humidity)
+        return str(current_vals['current_location_humidity'])
     else:
         abort(404)
 
 
 @app.route('/api/<string:metric_type>/location/diff')
 def get_location_temp_or_humidity_diff(metric_type: str):
-    # TODO
-    abort(501)
+    if metric_type == 'temperature':
+        return str(
+            current_vals['current_temp'] - current_vals['current_location_temp']
+        )
+    elif metric_type == 'humidity':
+        return str(
+            current_vals['current_humidity'] - current_vals['current_location_humidity']
+        )
+    else:
+        abort(404)
 
 
 @app.route('/api/<string:metric_type>/location/diff/<string:timescale>')
