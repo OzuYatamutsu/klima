@@ -11,4 +11,4 @@ install:
   - pip install -r requirements.txt
   - cp -fv config.sample.py config.py
 script:
-  - python test/*.py
+  - python test/test_influx.py
