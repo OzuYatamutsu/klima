@@ -1,4 +1,5 @@
 from run import *
+from config import influx_settings, location_settings
 from measurement_type import MeasurementType
 from influx.influx_adapter import get_data_at_relative_time
 from logging import getLogger
@@ -18,23 +19,25 @@ def hello_world():
     return 'TODO'
 
 
-@app.route('/api/<string:metric_type>')
-def get_current_temp_or_humidity(metric_type: str):
-    if metric_type == 'temperature':
+@app.route('/api/<string:sensor_type>')
+def get_current_temp_or_humidity(sensor_type: str):
+    if sensor_type == 'temperature':
         return str(current_vals['current_temp'])
-    elif metric_type == 'humidity':
+    elif sensor_type == 'humidity':
         return str(current_vals['current_humidity'])
     else:
         abort(404)
 
 
-@app.route('/api/<string:metric_type>/<string:timescale>')
-def get_temp_or_humidity_at_time(metric_type: str, timescale: str):
+@app.route('/api/<string:sensor_type>/<string:timescale>')
+def get_temp_or_humidity_at_time(sensor_type: str, timescale: str):
     result = {}
 
-    if metric_type == 'temperature':
+    if not influx_settings['enabled']:
+        return '', 204
+    if sensor_type == 'temperature':
         result = get_data_at_relative_time(MeasurementType.SENSOR_TEMPERATURE, timescale)
-    elif metric_type == 'humidity':
+    elif sensor_type == 'humidity':
         result = get_data_at_relative_time(MeasurementType.SENSOR_HUMIDITY, timescale)
     else:
         abort(404)
@@ -44,23 +47,27 @@ def get_temp_or_humidity_at_time(metric_type: str, timescale: str):
     return jsonify(result)
 
 
-@app.route('/api/<string:metric_type>/location')
-def get_location_temp_or_humidity(metric_type: str):
-    if metric_type == 'temperature':
+@app.route('/api/<string:sensor_type>/location')
+def get_location_temp_or_humidity(sensor_type: str):
+    if not location_settings['enabled']:
+        return '', 204
+    if sensor_type == 'temperature':
         return str(current_vals['current_location_temp'])
-    elif metric_type == 'humidity':
+    elif sensor_type == 'humidity':
         return str(current_vals['current_location_humidity'])
     else:
         abort(404)
 
 
-@app.route('/api/<string:metric_type>/location/<string:timescale>')
-def get_location_temp_or_humidity_at_time(metric_type: str, timescale: str):
+@app.route('/api/<string:sensor_type>/location/<string:timescale>')
+def get_location_temp_or_humidity_at_time(sensor_type: str, timescale: str):
     result = {}
 
-    if metric_type == 'temperature':
+    if not location_settings['enabled'] or not influx_settings['enabled']:
+        return '', 204
+    if sensor_type == 'temperature':
         result = get_data_at_relative_time(MeasurementType.LOCATION_TEMPERATURE, timescale)
-    elif metric_type == 'humidity':
+    elif sensor_type == 'humidity':
         result = get_data_at_relative_time(MeasurementType.LOCATION_HUMIDITY, timescale)
     else:
         abort(404)
@@ -70,13 +77,15 @@ def get_location_temp_or_humidity_at_time(metric_type: str, timescale: str):
     return jsonify(result)
 
 
-@app.route('/api/<string:metric_type>/location/diff')
-def get_location_temp_or_humidity_diff(metric_type: str):
-    if metric_type == 'temperature':
+@app.route('/api/<string:sensor_type>/location/diff')
+def get_location_temp_or_humidity_diff(sensor_type: str):
+    if not location_settings['enabled']:
+        return '', 204
+    if sensor_type == 'temperature':
         return str(
             current_vals['current_temp'] - current_vals['current_location_temp']
         )
-    elif metric_type == 'humidity':
+    elif sensor_type == 'humidity':
         return str(
             current_vals['current_humidity'] - current_vals['current_location_humidity']
         )
@@ -84,18 +93,20 @@ def get_location_temp_or_humidity_diff(metric_type: str):
         abort(404)
 
 
-@app.route('/api/<string:metric_type>/location/diff/<string:timescale>')
-def get_location_temp_or_humidity_diff_at_time(metric_type: str, timescale: str):
+@app.route('/api/<string:sensor_type>/location/diff/<string:timescale>')
+def get_location_temp_or_humidity_diff_at_time(sensor_type: str, timescale: str):
     result = {}
 
-    if metric_type == 'temperature':
+    if not location_settings['enabled'] or not influx_settings['enabled']:
+        return '', 204
+    if sensor_type == 'temperature':
         temp_sensor = get_data_at_relative_time(MeasurementType.SENSOR_TEMPERATURE, timescale)
         temp_location = get_data_at_relative_time(MeasurementType.LOCATION_TEMPERATURE, timescale)
         if temp_sensor == 0.0 or temp_location == 0.0:
             result = 0.0
         else:
             result = {'time': temp_sensor['time'], 'value': temp_sensor['value'] - temp_location['value']}
-    elif metric_type == 'humidity':
+    elif sensor_type == 'humidity':
         humid_sensor = get_data_at_relative_time(MeasurementType.SENSOR_HUMIDITY, timescale)
         humid_location = get_data_at_relative_time(MeasurementType.LOCATION_HUMIDITY, timescale)
         if humid_sensor == 0.0 or humid_location == 0.0:
@@ -110,18 +121,20 @@ def get_location_temp_or_humidity_diff_at_time(metric_type: str, timescale: str)
     return jsonify(result)
 
 
-@app.route('/api/<string:metric_type>/location/diff/avg/<string:timescale>')
-def get_location_temp_or_humidity_diff_avg_at_time(metric_type: str, timescale: str):
+@app.route('/api/<string:sensor_type>/location/diff/avg/<string:timescale>')
+def get_location_temp_or_humidity_diff_avg_at_time(sensor_type: str, timescale: str):
     result = {}
 
-    if metric_type == 'temperature':
+    if not location_settings['enabled'] or not influx_settings['enabled']:
+        return '', 204
+    if sensor_type == 'temperature':
         temp_sensor_avg = get_data_at_relative_time(MeasurementType.SENSOR_TEMPERATURE, timescale, True)
         temp_location_avg = get_data_at_relative_time(MeasurementType.LOCATION_TEMPERATURE, timescale, True)
         if temp_sensor_avg == 0.0 or temp_location_avg == 0.0:
             result = 0.0
         else:
             result = {'time': temp_sensor_avg['time'], 'value': temp_sensor_avg['value'] - temp_location_avg['value']}
-    elif metric_type == 'humidity':
+    elif sensor_type == 'humidity':
         humid_sensor_avg = get_data_at_relative_time(MeasurementType.SENSOR_HUMIDITY, timescale, True)
         humid_location_avg = get_data_at_relative_time(MeasurementType.LOCATION_HUMIDITY, timescale, True)
         if humid_sensor_avg == 0.0 or humid_location_avg == 0.0:
