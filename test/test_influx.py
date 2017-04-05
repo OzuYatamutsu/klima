@@ -1,13 +1,10 @@
-# Augment path for src files
-import sys
-import os.path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
+from test.setup_paths import *
 from unittest import TestCase, main
+from time import sleep
 from influx.influx_adapter import *
 from influx.datapoint_utils import *
 from influx.measurement_strings import *
-from measurement_type import MeasurementType
+
 
 class TestInflux(TestCase):
     def setUp(self):
@@ -38,14 +35,26 @@ class TestInflux(TestCase):
         Tests if we can read a previously written datapoint from the database
         """
 
-        pass # TODO
+        influx_push_data(temp_val=10.0, humid_val=20.0, datapoint_type=DatapointType.SENSOR)
+        self.assertGreaterEqual(len(get_client().query("SELECT * FROM %s LIMIT 1" % temp_measurement_str)), 1)
+        self.assertGreaterEqual(len(get_client().query("SELECT * FROM %s LIMIT 1" % humidity_measurement_str)), 1)
+
+        # And clean up
+        get_client().delete_series(influx_settings['database'], temp_measurement_str)
+        get_client().delete_series(influx_settings['database'], humidity_measurement_str)
 
     def test_can_query_for_previous_timescale(self):
         """
         Tests whether we can get a previous datapoint from a previous time
         """
 
-        pass # TODO
+        influx_push_data(temp_val=10.0, humid_val=20.0, datapoint_type=DatapointType.SENSOR)
+
+        # Wait 2 seconds before query
+        sleep(2)
+
+        self.assertGreaterEqual(len(get_data_at_relative_time(temp_measurement_str, '1s')), 1)
+        self.assertGreaterEqual(len(get_data_at_relative_time(humidity_measurement_str, '1s')), 1)
 
 if __name__ == '__main__':
     main()
