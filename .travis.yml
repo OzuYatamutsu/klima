@@ -14,6 +14,7 @@ install:
   - cp -fv config.sample.py config.py
   - sed 's/is_testing = False/is_testing = True/g' config.py > config.py
   - "sed \"s/'database': 'klima'/'database': '_klima_test'/g\" config.py > config.py"
+  - ls -la
   - cat config.py
 script:
   - nosetests 
