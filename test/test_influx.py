@@ -7,6 +7,7 @@ from time import sleep
 
 class TestInflux(TestCase):
     def setUp(self):
+        self.db = get_client()
         self.temp_measurement_test_str = 'klima-test_temperature'
         self.humid_measurement_test_str = 'klima-test_humidity'
 
@@ -25,8 +26,8 @@ class TestInflux(TestCase):
         influx_push_data(temp_val=10.0, humid_val=20.0, datapoint_type=DatapointType.SENSOR)
 
         # And clean up
-        get_client().delete_series(influx_settings['database'], temp_measurement_str)
-        get_client().delete_series(influx_settings['database'], humidity_measurement_str)
+        self.db.delete_series(influx_settings['database'], temp_measurement_str)
+        self.db.delete_series(influx_settings['database'], humidity_measurement_str)
 
     def test_can_read_data(self):
         """
@@ -34,12 +35,12 @@ class TestInflux(TestCase):
         """
 
         influx_push_data(temp_val=10.0, humid_val=20.0, datapoint_type=DatapointType.SENSOR)
-        self.assertGreaterEqual(len(get_client().query("SELECT * FROM %s LIMIT 1" % temp_measurement_str)), 1)
-        self.assertGreaterEqual(len(get_client().query("SELECT * FROM %s LIMIT 1" % humidity_measurement_str)), 1)
+        self.assertGreaterEqual(len(self.db.query("SELECT * FROM %s LIMIT 1" % temp_measurement_str)), 1)
+        self.assertGreaterEqual(len(self.db.query("SELECT * FROM %s LIMIT 1" % humidity_measurement_str)), 1)
 
         # And clean up
-        get_client().delete_series(influx_settings['database'], temp_measurement_str)
-        get_client().delete_series(influx_settings['database'], humidity_measurement_str)
+        self.db.delete_series(influx_settings['database'], temp_measurement_str)
+        self.db.delete_series(influx_settings['database'], humidity_measurement_str)
 
     def test_can_query_for_previous_timescale(self):
         """
