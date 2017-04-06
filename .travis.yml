@@ -21,4 +21,4 @@ install:
   - ls -la
   - cat config.py
 script:
-  - nosetests 
+  - nosetests -vv
