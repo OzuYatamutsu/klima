@@ -156,8 +156,8 @@ def get_location_temp_or_humidity_diff_avg_at_time(sensor_type: str, timescale: 
         return '', 204
     return jsonify(result)
 
+if __name__ == '__main__':
+    app.run()
 
-app.run()
-
-# Shut down thread if Ctrl+C
-prog_thread.join(1)
+    # Shut down thread if Ctrl+C
+    prog_thread.join(1)
