@@ -78,7 +78,7 @@ class MainThread(Thread):
                 self.current_vals['current_humidity'] = float(humid_val)
 
             if location_settings['enabled']:
-                remote_querier: WeatherAdapter = WundergroundAdapter() if not is_testing else MockWeatherAdapater
+                remote_querier: WeatherAdapter = WundergroundAdapter() if not is_testing else MockWeatherAdapater()
                 logger.debug('Collecting location temp/humiditiy from remote')
                 self.current_vals['current_location_temp'] = remote_querier.get_outside_temp()
                 self.current_vals['current_location_humidity'] = remote_querier.get_outside_humidity()
