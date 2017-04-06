@@ -25,10 +25,6 @@ class TestInflux(TestCase):
 
         influx_push_data(temp_val=10.0, humid_val=20.0, datapoint_type=DatapointType.SENSOR)
 
-        # And clean up
-        self.db.delete_series(influx_settings['database'], temp_measurement_str)
-        self.db.delete_series(influx_settings['database'], humidity_measurement_str)
-
     def test_can_read_data(self):
         """
         Tests if we can read a previously written datapoint from the database
@@ -37,10 +33,6 @@ class TestInflux(TestCase):
         influx_push_data(temp_val=10.0, humid_val=20.0, datapoint_type=DatapointType.SENSOR)
         self.assertGreaterEqual(len(self.db.query("SELECT * FROM %s LIMIT 1" % temp_measurement_str)), 1)
         self.assertGreaterEqual(len(self.db.query("SELECT * FROM %s LIMIT 1" % humidity_measurement_str)), 1)
-
-        # And clean up
-        self.db.delete_series(influx_settings['database'], temp_measurement_str)
-        self.db.delete_series(influx_settings['database'], humidity_measurement_str)
 
     def test_can_query_for_previous_timescale(self):
         """
@@ -55,8 +47,6 @@ class TestInflux(TestCase):
         self.assertGreaterEqual(len(get_data_at_relative_time(temp_measurement_str, '1s')), 1)
         self.assertGreaterEqual(len(get_data_at_relative_time(humidity_measurement_str, '1s')), 1)
 
-    def tearDown(self):
-        get_client().drop_database(influx_settings['database'])
 
 if __name__ == '__main__':
     main()
