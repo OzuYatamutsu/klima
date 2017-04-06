@@ -63,7 +63,7 @@ def get_data_at_relative_time(measurement: MeasurementType, relative_time_ago: s
     """
 
     # Returns the first result for each case
-    base_query = "SELECT value FROM %s WHERE time > now() - %s LIMIT 1"
+    base_query = "SELECT value FROM %s WHERE time >= now() - %s LIMIT 1"
     if avg:
         base_query = "SELECT MOVING_AVERAGE(value, 5) as value FROM %s WHERE time > now() - %s LIMIT 10"
     if measurement == MeasurementType.SENSOR_TEMPERATURE:
