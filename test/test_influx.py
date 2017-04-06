@@ -47,6 +47,8 @@ class TestInflux(TestCase):
         self.assertGreaterEqual(len(get_data_at_relative_time(temp_measurement_str, '1s')), 1)
         self.assertGreaterEqual(len(get_data_at_relative_time(humidity_measurement_str, '1s')), 1)
 
+    def tearDown(self):
+        self.db.drop_database(influx_settings['database'])
 
 if __name__ == '__main__':
     main()
