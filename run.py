@@ -45,21 +45,20 @@ class MainThread(Thread):
         self.current_vals['current_location_temp'] = 0.0
         self.current_vals['current_location_humidity'] = 0.0
 
-        if sensor_settings['type'] is SensorType.FILE:
+        # For Travis
+        if is_testing:
+            logger.info("In testing mode. Initing mock sensors.")
+            self.temp_sensor = MockSensor()
+            self.humid_sensor = MockSensor()
+        elif sensor_settings['type'] is SensorType.FILE:
             self.temp_sensor = FileSensor(sensor_settings['temperature'])
             self.humid_sensor = FileSensor(sensor_settings['humidity'])
-
         elif sensor_settings['type'] is SensorType.SERIAL:
             self.temp_sensor = SerialSensor(
                 sensor_settings['temperature'],
                 sensor_settings['baud'],
                 sensor_settings['timeout']
             )
-
-        # For Travis
-        elif is_testing:
-            self.temp_sensor = MockSensor()
-            self.humid_sensor = MockSensor()
 
     def run(self):
         """
