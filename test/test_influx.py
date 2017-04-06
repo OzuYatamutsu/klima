@@ -1,13 +1,8 @@
-# Augment path for src files
-import sys
-import os.path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
-from unittest import TestCase, main
-from time import sleep
 from influx.influx_adapter import *
 from influx.datapoint_utils import *
 from influx.measurement_strings import *
+from unittest import TestCase, main
+from time import sleep
 
 
 class TestInflux(TestCase):
