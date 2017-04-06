@@ -9,7 +9,7 @@ class MockSensor(Sensor):
         self.is_closed = False
 
     def read_data(self):
-        return 1.5 + randrange(0, 10)
+        return str(1.5 + randrange(0, 10))
 
     def close(self):
         self.is_closed = True
