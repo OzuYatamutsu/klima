@@ -21,4 +21,5 @@ install:
   - ls -la
   - cat config.py
 script:
-  - nosetests -vv
+  - nosetests test/test_influx.py
+  - nosetests test/test_routes.py
