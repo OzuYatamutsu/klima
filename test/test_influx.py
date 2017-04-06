@@ -7,7 +7,6 @@ from time import sleep
 
 class TestInflux(TestCase):
     def setUp(self):
-        self.db = get_client()
         self.temp_measurement_test_str = 'klima-test_temperature'
         self.humid_measurement_test_str = 'klima-test_humidity'
 
@@ -54,6 +53,9 @@ class TestInflux(TestCase):
 
         self.assertGreaterEqual(len(get_data_at_relative_time(temp_measurement_str, '1s')), 1)
         self.assertGreaterEqual(len(get_data_at_relative_time(humidity_measurement_str, '1s')), 1)
+
+    def tearDown(self):
+        get_client().drop_database(influx_settings['database'])
 
 if __name__ == '__main__':
     main()
