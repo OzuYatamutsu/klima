@@ -43,7 +43,9 @@ class TestInflux(TestCase):
 
         # Wait 2 seconds before query
         sleep(2)
-        
+
+        # DEBUG THE TEST
+        print(str(self.db.query("SELECT * FROM %s WHERE time >= now() - %s LIMIT 1" % (temp_measurement_str, '5s'))))
         self.assertGreaterEqual(len(get_data_at_relative_time(temp_measurement_str, '5s')), 1)
         self.assertGreaterEqual(len(get_data_at_relative_time(humidity_measurement_str, '5s')), 1)
 
